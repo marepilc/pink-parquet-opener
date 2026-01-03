@@ -4,6 +4,7 @@
   "description": "Open parquet files in Pink Parquet viewer",
   "version": "0.1.0",
   "publisher": "mp76",
+  "license": "MIT",
   "icon": "images/icon.png",
   "repository": {
     "type": "git",
