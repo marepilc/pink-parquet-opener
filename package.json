@@ -66,8 +66,8 @@
       "properties": {
         "pinkParquet.executablePath": {
           "type": "string",
-          "default": "C:\\Program Files\\Pink Parquet\\pinkparquet.exe",
-          "description": "Path to Pink Parquet executable"
+          "default": "",
+          "description": "Path to Pink Parquet executable (e.g. C:\\Program Files\\Pink Parquet\\pinkparquet.exe on Windows, /Applications/Pink Parquet.app on macOS)"
         }
       }
     }

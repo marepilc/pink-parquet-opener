@@ -26,7 +26,16 @@ function activate(context) {
 
         // Get configuration
         const config = vscode.workspace.getConfiguration("pinkParquet");
-        const exePath = config.get("executablePath");
+        let exePath = config.get("executablePath");
+
+        if (!exePath) {
+          // Provide defaults based on platform
+          if (process.platform === "win32") {
+            exePath = "C:\\Program Files\\Pink Parquet\\pinkparquet.exe";
+          } else if (process.platform === "darwin") {
+            exePath = "/Applications/Pink Parquet.app";
+          }
+        }
 
         if (!exePath) {
           vscode.window.showErrorMessage("Pink Parquet executable path is not configured.");
@@ -109,6 +118,14 @@ function activate(context) {
         if (process.platform === "win32") {
           // Use spawn for Windows to handle spaces in paths correctly
           child = spawn(exePath, [filePath], {
+            detached: true,
+            stdio: 'ignore'
+          });
+          child.unref();
+        } else if (process.platform === "darwin") {
+          // Use 'open' command for macOS
+          // This handles both .app bundles and standalone binaries
+          child = spawn("open", ["-a", exePath, filePath], {
             detached: true,
             stdio: 'ignore'
           });

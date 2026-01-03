@@ -5,14 +5,16 @@ Open `.parquet` files directly in Pink Parquet viewer from VS Code.
 ## Features
 
 - Right-click any `.parquet` file to open in Pink Parquet
-- Works in both Windows and WSL environments
+- Works in Windows, WSL, and macOS environments
 - Configurable executable path
 - Status bar integration
 
 ## Requirements
 
 - Pink Parquet must be installed on your system
-- Default installation path: `C:\Program Files\Pink Parquet\pinkparquet.exe`
+- Default installation paths:
+  - Windows: `C:\Program Files\Pink Parquet\pinkparquet.exe`
+  - macOS: `/Applications/Pink Parquet.app`
 
 ## Extension Settings
 
