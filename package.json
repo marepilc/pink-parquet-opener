@@ -21,7 +21,6 @@
     "viewer"
   ],
   "activationEvents": [
-    "onCommand:pinkparquet.open",
     "onFileSystem:file",
     "onFileSystem:vscode-remote",
     "onLanguage:parquet",
