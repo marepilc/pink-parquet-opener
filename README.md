@@ -1,65 +1,37 @@
-# pink-parquet-opener README
+# Pink Parquet Opener
 
-This is the README for your extension "pink-parquet-opener". After writing up a brief description, we recommend including the following sections.
+Open `.parquet` files directly in Pink Parquet viewer from VS Code.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- Right-click any `.parquet` file to open in Pink Parquet
+- Works in both Windows and WSL environments
+- Configurable executable path
+- Status bar integration
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- Pink Parquet must be installed on your system
+- Default installation path: `C:\Program Files\Pink Parquet\pinkparquet.exe`
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+* `pinkParquet.executablePath`: Set the path to Pink Parquet executable
+
+## Usage
+
+1. Right-click any `.parquet` file in the Explorer
+2. Select "Open in Pink Parquet"
+3. The file will open in Pink Parquet viewer
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- WSL2 paths are automatically converted to Windows paths
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.1.0
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+Initial release of Pink Parquet Opener

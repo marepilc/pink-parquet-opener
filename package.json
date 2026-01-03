@@ -2,20 +2,75 @@
   "name": "pink-parquet-opener",
   "displayName": "Pink Parquet Opener",
   "description": "Open parquet files in Pink Parquet viewer",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "publisher": "mp76",
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marepilc/pink-parquet-opener"
+  },
   "engines": {
-    "vscode": "^1.107.0"
+    "vscode": "^1.75.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "keywords": [
+    "parquet",
+    "data",
+    "viewer"
+  ],
+  "activationEvents": [
+    "onCommand:pinkparquet.open",
+    "onFileSystem:file",
+    "onFileSystem:vscode-remote",
+    "onLanguage:parquet",
+    "workspaceContains:**/*.parquet"
+  ],
+  "extensionKind": [
+    "ui",
+    "workspace"
+  ],
   "main": "./extension.js",
   "contributes": {
-    "commands": [{
-      "command": "pink-parquet-opener.helloWorld",
-      "title": "Hello World"
-    }]
+    "commands": [
+      {
+        "command": "pinkparquet.open",
+        "title": "Open in Pink Parquet",
+        "category": "Pink Parquet"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "pinkparquet.open",
+          "when": "resourceFilename =~ /\\.parquet$/i",
+          "group": "navigation"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "pinkparquet.open",
+          "when": "resourceFilename =~ /\\.parquet$/i"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "pinkparquet.open",
+          "when": "resourceFilename =~ /\\.parquet$/i"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Pink Parquet",
+      "properties": {
+        "pinkParquet.executablePath": {
+          "type": "string",
+          "default": "C:\\Program Files\\Pink Parquet\\pinkparquet.exe",
+          "description": "Path to Pink Parquet executable"
+        }
+      }
+    }
   },
   "scripts": {
     "lint": "eslint .",
@@ -23,7 +78,7 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.107.0",
+    "@types/vscode": "^1.75.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
     "eslint": "^9.25.1",
