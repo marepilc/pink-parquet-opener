@@ -4,6 +4,10 @@ All notable changes to the "pink-parquet-opener" extension will be documented in
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
+## [0.2.0]
+
+- Added support for macOS
+
+## [0.1.0]
 
 - Initial release
