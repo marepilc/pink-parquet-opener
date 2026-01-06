@@ -11,7 +11,7 @@
     "url": "https://github.com/marepilc/pink-parquet-opener"
   },
   "engines": {
-    "vscode": "^1.107.0"
+    "vscode": "^1.105.0"
   },
   "categories": [
     "Other"
