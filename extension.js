@@ -34,6 +34,8 @@ function activate(context) {
             exePath = "C:\\Program Files\\Pink Parquet\\pinkparquet.exe";
           } else if (process.platform === "darwin") {
             exePath = "/Applications/Pink Parquet.app";
+          } else if (process.platform === "linux") {
+            exePath = "/usr/bin/pinkparquet";
           }
         }
 
@@ -45,71 +47,75 @@ function activate(context) {
         // Handle different environments
         let filePath = uri.fsPath;
 
+        // Differentiate between native Linux and WSL
+        let isWsl = false;
+        if (process.platform === "linux") {
+          try {
+            if (fs.existsSync('/proc/version')) {
+              const version = fs.readFileSync('/proc/version', 'utf8').toLowerCase();
+              isWsl = version.includes('microsoft');
+            }
+          } catch (e) {
+            console.error("Error during WSL detection:", e);
+          }
+        }
+
         // If running in WSL or remote, we need to be careful
         const isRemote = uri.scheme === 'vscode-remote';
         const isWslRemote = isRemote && uri.authority.startsWith('wsl+');
         
         // If running in WSL, convert path
-        if (process.platform === "linux" || isWslRemote) {
+        if (isWsl || isWslRemote) {
           try {
-            // Check if we are actually in WSL
-            let isWsl = false;
-            if (fs.existsSync('/proc/version')) {
-              const version = fs.readFileSync('/proc/version', 'utf8').toLowerCase();
-              isWsl = version.includes('microsoft');
+            let distroName = process.env.WSL_DISTRO_NAME || "";
+            
+            if (isWslRemote && !distroName) {
+              // For vscode-remote, authority is often wsl+Ubuntu-24.04
+              distroName = uri.authority.replace('wsl+', '');
+            }
+            
+            // If it's a remote URI, fsPath might be just the Linux path (e.g. /home/user/file.parquet)
+            // We want to make sure we use uri.path if fsPath isn't what we expect
+            if (isWslRemote) {
+              filePath = uri.path;
             }
 
-            if (isWsl || isWslRemote) {
-              let distroName = process.env.WSL_DISTRO_NAME || "";
-              
-              if (isWslRemote && !distroName) {
-                // For vscode-remote, authority is often wsl+Ubuntu-24.04
-                distroName = uri.authority.replace('wsl+', '');
+            // Convert the parquet file path to Windows path for the Windows executable
+            try {
+              // If we are on Linux (WSL side), we can use wslpath
+              if (process.platform === "linux") {
+                const convertedPath = execSync(`wslpath -w "${filePath}"`, {
+                  encoding: "utf8",
+                }).trim();
+                if (convertedPath) {
+                  filePath = convertedPath;
+                }
+              } else if (isWslRemote && distroName) {
+                // If we are on Windows side (extensionKind UI) but it's a WSL remote file
+                filePath = `\\\\wsl.localhost\\${distroName}${filePath.replace(/\//g, "\\")}`;
               }
-              
-              // If it's a remote URI, fsPath might be just the Linux path (e.g. /home/user/file.parquet)
-              // We want to make sure we use uri.path if fsPath isn't what we expect
-              if (isWslRemote) {
-                filePath = uri.path;
+            } catch (convErr) {
+              // Fallback: manually construct the path if we have the distro name
+              if (distroName && filePath.startsWith("/")) {
+                 filePath = `\\\\wsl.localhost\\${distroName}${filePath.replace(/\//g, "\\")}`;
               }
+            }
 
-              // Convert the parquet file path to Windows path for the Windows executable
-              try {
-                // If we are on Linux (WSL side), we can use wslpath
-                if (process.platform === "linux") {
-                  const convertedPath = execSync(`wslpath -w "${filePath}"`, {
-                    encoding: "utf8",
-                  }).trim();
-                  if (convertedPath) {
-                    filePath = convertedPath;
-                  }
-                } else if (isWslRemote && distroName) {
-                  // If we are on Windows side (extensionKind UI) but it's a WSL remote file
-                  filePath = `\\\\wsl.localhost\\${distroName}${filePath.replace(/\//g, "\\")}`;
-                }
-              } catch (convErr) {
-                // Fallback: manually construct the path if we have the distro name
-                if (distroName && filePath.startsWith("/")) {
-                   filePath = `\\\\wsl.localhost\\${distroName}${filePath.replace(/\//g, "\\")}`;
-                }
-              }
-
-              // Ensure we use \\wsl.localhost\ instead of \\wsl$\
-              if (filePath.startsWith("\\\\wsl$\\")) {
-                filePath = filePath.replace("\\\\wsl$\\", "\\\\wsl.localhost\\");
-              } else if (filePath.startsWith("/")) {
-                // If it's still a Linux path and we didn't fallback yet
-                if (filePath.startsWith("/mnt/") && filePath.length > 5) {
-                  // Handle /mnt/c/... -> C:\...
-                  const drive = filePath[5].toUpperCase();
-                  filePath = `${drive}:${filePath.substring(6).replace(/\//g, "\\")}`;
-                } else if (distroName) {
-                  filePath = `\\\\wsl.localhost\\${distroName}${filePath.replace(/\//g, "\\")}`;
-                }
+            // Ensure we use \\wsl.localhost\ instead of \\wsl$\
+            if (filePath.startsWith("\\\\wsl$\\")) {
+              filePath = filePath.replace("\\\\wsl$\\", "\\\\wsl.localhost\\");
+            } else if (filePath.startsWith("/")) {
+              // If it's still a Linux path and we didn't fallback yet
+              if (filePath.startsWith("/mnt/") && filePath.length > 5) {
+                // Handle /mnt/c/... -> C:\...
+                const drive = filePath[5].toUpperCase();
+                filePath = `${drive}:${filePath.substring(6).replace(/\//g, "\\")}`;
+              } else if (distroName) {
+                filePath = `\\\\wsl.localhost\\${distroName}${filePath.replace(/\//g, "\\")}`;
               }
             }
           } catch (e) {
-            console.error("Error during WSL detection:", e);
+            console.error("Error during WSL path conversion:", e);
           }
         }
 
@@ -130,8 +136,8 @@ function activate(context) {
             stdio: 'ignore'
           });
           child.unref();
-        } else {
-          // Fallback for WSL/Linux
+        } else if (isWsl || isWslRemote) {
+          // Fallback for WSL
           // Use cmd.exe /c start to launch Windows applications from WSL
           // This is more robust than calling powershell.exe directly
           const command = `cmd.exe`;
@@ -140,6 +146,13 @@ function activate(context) {
           const args = ["/c", "start", "", exePath, filePath];
           
           child = spawn(command, args, {
+            detached: true,
+            stdio: 'ignore'
+          });
+          child.unref();
+        } else {
+          // Native Linux (e.g. Ubuntu)
+          child = spawn(exePath, [filePath], {
             detached: true,
             stdio: 'ignore'
           });

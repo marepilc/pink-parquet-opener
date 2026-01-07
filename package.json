@@ -2,7 +2,7 @@
   "name": "pink-parquet-opener",
   "displayName": "Pink Parquet Opener",
   "description": "Open parquet files in Pink Parquet viewer",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "publisher": "mp76",
   "license": "MIT",
   "icon": "images/icon.png",
@@ -67,7 +67,7 @@
         "pinkParquet.executablePath": {
           "type": "string",
           "default": "",
-          "description": "Path to Pink Parquet executable (e.g. C:\\Program Files\\Pink Parquet\\pinkparquet.exe on Windows, /Applications/Pink Parquet.app on macOS)"
+          "description": "Path to Pink Parquet executable (e.g. C:\\Program Files\\Pink Parquet\\pinkparquet.exe on Windows, /Applications/Pink Parquet.app on macOS, /usr/bin/pinkparquet on Linux)"
         }
       }
     }
