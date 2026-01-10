@@ -2,7 +2,7 @@
   "name": "pink-parquet-opener",
   "displayName": "Pink Parquet Opener",
   "description": "Open parquet files in Pink Parquet viewer",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "mp76",
   "license": "MIT",
   "icon": "images/icon.png",
@@ -25,7 +25,9 @@
     "onFileSystem:file",
     "onFileSystem:vscode-remote",
     "onLanguage:parquet",
-    "workspaceContains:**/*.parquet"
+    "onLanguage:csv",
+    "workspaceContains:**/*.parquet",
+    "workspaceContains:**/*.csv"
   ],
   "extensionKind": [
     "ui",
@@ -44,20 +46,20 @@
       "explorer/context": [
         {
           "command": "pinkparquet.open",
-          "when": "resourceFilename =~ /\\.parquet$/i",
+          "when": "resourceFilename =~ /\\.(parquet|csv)$/i",
           "group": "navigation"
         }
       ],
       "editor/title/context": [
         {
           "command": "pinkparquet.open",
-          "when": "resourceFilename =~ /\\.parquet$/i"
+          "when": "resourceFilename =~ /\\.(parquet|csv)$/i"
         }
       ],
       "editor/context": [
         {
           "command": "pinkparquet.open",
-          "when": "resourceFilename =~ /\\.parquet$/i"
+          "when": "resourceFilename =~ /\\.(parquet|csv)$/i"
         }
       ]
     },

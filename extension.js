@@ -15,11 +15,12 @@ function activate(context) {
           const activeEditor = vscode.window.activeTextEditor;
           if (
             activeEditor &&
-            activeEditor.document.fileName.toLowerCase().endsWith(".parquet")
+            (activeEditor.document.fileName.toLowerCase().endsWith(".parquet") ||
+             activeEditor.document.fileName.toLowerCase().endsWith(".csv"))
           ) {
             uri = activeEditor.document.uri;
           } else {
-            vscode.window.showErrorMessage("Please select a .parquet file");
+            vscode.window.showErrorMessage("Please select a .parquet or .csv file");
             return;
           }
         }
@@ -182,10 +183,14 @@ function activate(context) {
   statusBarItem.text = "$(file-binary) Open in Pink Parquet";
   statusBarItem.tooltip = "Open current file in Pink Parquet";
 
-  // Show only for parquet files
+  // Show only for parquet or csv files
   function updateStatusBar() {
     const activeEditor = vscode.window.activeTextEditor;
-    if (activeEditor && activeEditor.document.fileName.toLowerCase().endsWith(".parquet")) {
+    if (
+      activeEditor &&
+      (activeEditor.document.fileName.toLowerCase().endsWith(".parquet") ||
+       activeEditor.document.fileName.toLowerCase().endsWith(".csv"))
+    ) {
       statusBarItem.show();
     } else {
       statusBarItem.hide();

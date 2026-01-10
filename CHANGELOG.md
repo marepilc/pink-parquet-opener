@@ -4,6 +4,15 @@ All notable changes to the "pink-parquet-opener" extension will be documented in
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.4.0]
+
+- Added support for opening CSV files from context menu
+- Bumped version to 0.4.0
+
+## [0.3.0]
+
+- Added support for native Linux (Ubuntu)
+
 ## [0.2.0]
 
 - Added support for macOS

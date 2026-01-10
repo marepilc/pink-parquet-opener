@@ -1,10 +1,10 @@
 # Pink Parquet Opener
 
-Open `.parquet` files directly in Pink Parquet viewer from VS Code.
+Open `.parquet` and `.csv` files directly in Pink Parquet viewer from VS Code.
 
 ## Features
 
-- Right-click any `.parquet` file to open in Pink Parquet
+- Right-click any `.parquet` or `.csv` file to open in Pink Parquet
 - Works in Windows, WSL, macOS, and Linux (Ubuntu) environments
 - Configurable executable path
 - Status bar integration
@@ -25,11 +25,15 @@ This extension contributes the following settings:
 
 ## Usage
 
-1. Right-click any `.parquet` file in the Explorer
+1. Right-click any `.parquet` or `.csv` file in the Explorer
 2. Select "Open in Pink Parquet"
 3. The file will open in Pink Parquet viewer
 
 ## Release Notes
+
+### 0.4.0
+
+- Added support for CSV files
 
 ### 0.3.0
 
